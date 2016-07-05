@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="nav">
+        <div id="prev">PREV</div>
+        <div id="next">NEXT</div>
+    </div>
+    <div id="current-month"></div>
+    <div id="current-year"></div>
+<table>
+    <thead>
+        <tr>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div id="container"></div>
+<div class="container"></div>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/underscore/underscore.js"></script>
+    <script src="node_modules/backbone/backbone.js"></script>
+    <!--<script src="view/weekView.js"></script>
+    <script src="view/monthView.js"></script>-->
+    <script>
+        var date = new Date();
+        refresh(date);
+        function refresh(date){
+            var tbody = $('tbody');
+            tbody.html('');
+            var y = date.getFullYear();
+            var m = date.getMonth();
+            var d =  date.getDay() ;
+            $('#current-month').html(m+1);
+            $('#current-year').html(y);
+            var firstDay = new Date(y,m,1);
+            var firstDayDay = firstDay.getDay();
+            function daysInMonth(month,year) {
+                return new Date(year, month, 0).getDate();
+            }
+            var daysMonth = daysInMonth(m+1, y);
+            var dayOfPrevMonth = daysInMonth(m, y);
+            var k = 1;
+            var l = 1;
+            for(var i =0;i<6;i++){
+                var tr = $('<tr></tr>');
+                for(var j=0;j<7;j++){
+                    if(i==0 && j<firstDayDay){
+                        tr.prepend('<td class="other-month">'+dayOfPrevMonth-- +'</td>')
+                    }else if( k > daysMonth ){
+                        if(j === 0){
+                            return false;
+                        }else{
+                            tr.append('<td class="other-month">'+ l++ +'</td>')
+                        };
+                    }else{
+                        tr.append('<td>'+ k +'</td>');
+                        k++;
+                    }
+                }
+                tbody.append(tr);
+                tr = null;
+            }
+
+        };
+            $('#next').on('click',function(){
+                nextClick('next');
+            });
+            $('#prev').on('click',function(){
+                nextClick('prev');
+            });
+        
+            function nextClick(v){
+                var y = $('#current-year').html().trim();
+                var m = $('#current-month').html().trim();
+                switch(v){
+                    case 'next':
+                        break;
+                    case 'prev':
+                        m = m - 2 ;
+                        break;
+                    default:
+                };
+                console.log(y,m);
+                var date = new Date(y,m,1);
+                refresh(date);
+            };
+
+        
+
+    </script>
+</body>
+</html>
